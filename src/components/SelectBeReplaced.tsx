@@ -17,21 +17,49 @@ export function SelectBeReplaced({
   defaultSelected = [],
   className,
 }: SelectBeReplacedProps) {
+  // Ensure at least one option is selected (default to first option if none provided)
+  const getInitialSelection = React.useCallback(() => {
+    if (defaultSelected.length > 0) {
+      return new Set(defaultSelected.slice(0, 1));
+    }
+    // Default to first option if no default provided
+    return new Set<ReplacementOption>(["only_remove_pause_symbols"]);
+  }, [defaultSelected]);
+
   const [selected, setSelected] = React.useState<Set<ReplacementOption>>(
-    new Set(defaultSelected.slice(0, 1)),
+    getInitialSelection,
   );
+
+  // Update parent when selection changes
+  React.useEffect(() => {
+    onSelectionChange?.(selected);
+  }, [selected, onSelectionChange]);
 
   const handleChange = React.useCallback(
     (option: ReplacementOption, checked: boolean) => {
-      const newSelected = new Set<ReplacementOption>();
       if (checked) {
-        newSelected.add(option);
+        const newSelected = new Set<ReplacementOption>([option]);
+        setSelected(newSelected);
+      } else {
+        if (selected.size === 1 && selected.has(option)) {
+          return;
+        }
+        const newSelected = new Set<ReplacementOption>();
+        setSelected(newSelected);
       }
-      setSelected(newSelected);
-      onSelectionChange?.(newSelected);
     },
-    [onSelectionChange],
+    [selected],
   );
+
+  const getSelectedText = React.useCallback(() => {
+    if (selected.has("only_remove_pause_symbols")) {
+      return "Only Remove Pause Symbols";
+    }
+    if (selected.has("remove_all_punctuation_marks")) {
+      return "Remove All Punctuation Marks";
+    }
+    return "None";
+  }, [selected]);
 
   return (
     <div className={className}>
@@ -59,6 +87,11 @@ export function SelectBeReplaced({
           <Label htmlFor="remove-all-punctuation-marks">
             Remove All Punctuation Marks
           </Label>
+        </div>
+        <div className="pt-2 border-t">
+          <p className="text-sm text-muted-foreground">
+            Current selection: <span className="font-medium text-foreground">{getSelectedText()}</span>
+          </p>
         </div>
       </div>
     </div>
