@@ -18,21 +18,19 @@ export function SelectBeReplaced({
   className,
 }: SelectBeReplacedProps) {
   const [selected, setSelected] = React.useState<Set<ReplacementOption>>(
-    new Set(defaultSelected),
+    new Set(defaultSelected.slice(0, 1)),
   );
 
   const handleChange = React.useCallback(
     (option: ReplacementOption, checked: boolean) => {
-      const newSelected = new Set(selected);
+      const newSelected = new Set<ReplacementOption>();
       if (checked) {
         newSelected.add(option);
-      } else {
-        newSelected.delete(option);
       }
       setSelected(newSelected);
       onSelectionChange?.(newSelected);
     },
-    [selected, onSelectionChange],
+    [onSelectionChange],
   );
 
   return (
