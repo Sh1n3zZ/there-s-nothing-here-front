@@ -42,7 +42,7 @@ interface FileUploadComponentProps {
 export function FileUploadComponent({
   maxFiles = 10,
   maxSize = 5 * 1024 * 1024, // 5MB default
-  accept,
+  accept = ".docx,application/vnd.openxmlformats-officedocument.wordprocessingml.document",
   multiple = true,
   replacementOptions,
   onUpload,
@@ -135,6 +135,14 @@ export function FileUploadComponent({
     });
   }, []);
 
+  const onFileValidate = React.useCallback((file: File): string | null => {
+    const fileName = file.name.toLowerCase();
+    if (!fileName.endsWith(".docx")) {
+      return "Only .docx files are allowed";
+    }
+    return null;
+  }, []);
+
   return (
     <FileUpload
       value={files}
@@ -144,6 +152,7 @@ export function FileUploadComponent({
       className={className}
       onUpload={handleUpload}
       onFileReject={onFileReject}
+      onFileValidate={onFileValidate}
       accept={accept}
       multiple={multiple}
     >
