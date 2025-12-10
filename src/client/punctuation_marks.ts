@@ -7,6 +7,7 @@ export const pause_symbols: string[] = [
   ",", // English comma
   "。", // Chinese period
   ".", // English period
+  "、", // Chinese enumeration comma
 ];
 
 /**
@@ -53,6 +54,5 @@ export const punctuation_marks: string[] = [
   "—", // Em dash
   "–", // En dash
   "-", // Hyphen
-  "、", // Chinese enumeration comma
   "·", // Middle dot
 ];

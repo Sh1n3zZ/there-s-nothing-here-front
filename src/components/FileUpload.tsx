@@ -11,13 +11,10 @@ import {
   FileUploadItemDelete,
   FileUploadItemMetadata,
   FileUploadItemPreview,
-  FileUploadItemProgress,
   FileUploadList,
   FileUploadTrigger,
-  useFileUpload,
 } from "@/components/ui/file-upload";
 import { replaceDocumentKeywords } from "@/client/upload";
-import { XCircle } from "lucide-react";
 import type { ReplacementOption } from "@/components/SelectBeReplaced";
 import {
   pause_symbols,
@@ -40,20 +37,6 @@ interface FileUploadComponentProps {
   ) => Promise<void> | void;
   autoDownload?: boolean;
   className?: string;
-}
-
-function FileUploadStatus({ file }: { file: File }) {
-  const fileState = useFileUpload((state) => state.files.get(file));
-
-  if (fileState?.status === "error") {
-    return (
-      <div className="-translate-x-1/2 -translate-y-1/2 absolute top-1/2 left-1/2">
-        <XCircle />
-      </div>
-    );
-  }
-
-  return <FileUploadItemProgress />;
 }
 
 export function FileUploadComponent({
@@ -118,6 +101,11 @@ export function FileUploadComponent({
             toast.success("File processed successfully", {
               description: file.name,
             });
+            setFiles((prevFiles) =>
+              prevFiles.filter(
+                (f) => f.name !== file.name || f.size !== file.size,
+              ),
+            );
           } catch (error) {
             const errorMessage =
               error instanceof Error
@@ -175,20 +163,15 @@ export function FileUploadComponent({
           </Button>
         </FileUploadTrigger>
       </FileUploadDropzone>
-      <FileUploadList orientation="horizontal">
+      <FileUploadList>
         {files.map((file, index) => (
-          <FileUploadItem key={index} value={file} className="p-0">
-            <FileUploadItemPreview className="size-20 [&>svg]:size-12">
-              <FileUploadStatus file={file} />
-            </FileUploadItemPreview>
-            <FileUploadItemMetadata className="sr-only" />
+          <FileUploadItem key={index} value={file}>
+            <FileUploadItemPreview />
+            <FileUploadItemMetadata />
             <FileUploadItemDelete asChild>
-              <Button
-                variant="secondary"
-                size="icon"
-                className="-top-1 -right-1 absolute size-5 rounded-full"
-              >
-                <X className="size-3" />
+              <Button variant="ghost" size="icon" className="size-7">
+                <X />
+                <span className="sr-only">Delete</span>
               </Button>
             </FileUploadItemDelete>
           </FileUploadItem>
