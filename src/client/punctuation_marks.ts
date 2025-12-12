@@ -4,9 +4,9 @@
  */
 export const pause_symbols: string[] = [
   "，", // Chinese comma
-  ",", // English comma
   "。", // Chinese period
-  ".", // English period
+  // ",", // English comma
+  // ".", // English period
   "、", // Chinese enumeration comma
 ];
 
