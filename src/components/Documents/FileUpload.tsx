@@ -15,7 +15,7 @@ import {
   FileUploadTrigger,
 } from "@/components/ui/file-upload";
 import { replaceDocumentKeywords } from "@/client/upload";
-import type { ReplacementOption } from "@/components/SelectBeReplaced";
+import type { ReplacementOption } from "@/components/Documents/SelectBeReplaced";
 import {
   pause_symbols,
   punctuation_marks,
